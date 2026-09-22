@@ -14,7 +14,7 @@ export async function generateFortuneWithGemini(userPrompt: string): Promise<str
     throw new Error('Brak GEMINI_API_KEY po stronie serwera.')
   }
 
-  const model = process.env.GEMINI_MODEL ?? 'gemini-2.0-flash'
+  const model = process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite'
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`
 
   const res = await fetch(url, {
