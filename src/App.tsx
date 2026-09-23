@@ -98,8 +98,8 @@ export default function App() {
         <p className="app__eyebrow">Tarot dnia roboczego</p>
         <h1>Co Cię czeka dzisiaj w pracy?</h1>
         <p className="app__lead">
-          Wpisz imię i datę urodzenia, wylosuj trzy karty i pozwól AI
-          połączyć symbolikę tarota z lekką dawką biurowego absurdu.
+          Wpisz imię i datę urodzenia, wylosuj trzy karty i pozwól wróżbicie Czarosławowi
+          połączyć symbolikę tarota z lekką dawką codziennego absurdu.
         </p>
       </header>
 
@@ -186,7 +186,7 @@ export default function App() {
       {phase !== 'form' && (
         <footer className="app__footer">
           <button type="button" className="btn btn--ghost" onClick={reset}>
-            Nowe losowanie (bez wróżby AI)
+            Nowe losowanie
           </button>
         </footer>
       )}
