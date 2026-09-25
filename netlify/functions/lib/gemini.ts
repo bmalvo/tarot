@@ -1,5 +1,3 @@
-import { SYSTEM_PROMPT } from './prompt'
-
 type GeminiResponse = {
   candidates?: {
     content?: { parts?: { text?: string }[] }
@@ -8,14 +6,18 @@ type GeminiResponse = {
   error?: { message?: string }
 }
 
-export async function generateFortuneWithGemini(userPrompt: string): Promise<string> {
+export async function generateFortuneWithGemini(
+  userPrompt: string, 
+  systemPrompt: string
+): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
     throw new Error('Brak GEMINI_API_KEY po stronie serwera.')
   }
 
-  const model = process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite'
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`
+  const model = process.env.GEMINI_MODEL ?? 'gemini-3.1-flash-lite'
+  
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
 
   const res = await fetch(url, {
     method: 'POST',
@@ -25,7 +27,7 @@ export async function generateFortuneWithGemini(userPrompt: string): Promise<str
     },
     body: JSON.stringify({
       systemInstruction: {
-        parts: [{ text: SYSTEM_PROMPT }],
+        parts: [{ text: systemPrompt }],
       },
       contents: [
         {
