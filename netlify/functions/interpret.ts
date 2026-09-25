@@ -5,7 +5,7 @@ import {
   type DrawnCard,
 } from '../../shared/tarotDeck'
 import { generateFortuneWithGemini } from './lib/gemini'
-import { buildUserPrompt } from './lib/prompt'
+import { buildUserPrompt, buildSystemPrompt, type JobSector } from './lib/prompt'
 import {
   assertDailyFortuneAvailable,
   recordDailyFortune,
@@ -21,6 +21,7 @@ type RequestCard = {
 type RequestBody = {
   name?: string
   birthDate?: string
+  sector?: JobSector
   cards?: RequestCard[]
 }
 
@@ -104,6 +105,8 @@ export const handler: Handler = async (event) => {
     return json(400, { error: 'Podaj datę urodzenia (RRRR-MM-DD).' })
   }
 
+  const sector: JobSector = body.sector ?? 'other'
+
   const cardsResult = validateCards(body.cards)
   if (typeof cardsResult === 'string') {
     return json(400, { error: cardsResult })
@@ -115,13 +118,18 @@ export const handler: Handler = async (event) => {
   }
 
   try {
+    const systemPrompt = buildSystemPrompt(sector)
+    
     const userPrompt = buildUserPrompt(
       name,
       birthDate,
       warsawTodayLabel(),
       cardsResult,
+      sector
     )
-    const fortune = await generateFortuneWithGemini(userPrompt)
+
+    const fortune = await generateFortuneWithGemini(userPrompt, systemPrompt)
+    
     await recordDailyFortune(event)
     return json(200, { fortune })
   } catch (e) {
