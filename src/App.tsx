@@ -7,9 +7,12 @@ import './App.css'
 
 type Phase = 'form' | 'cards' | 'fortune'
 
+type JobSector = 'auchan' | 'eo' | 'other'
+
 type UserInfo = {
   name: string
   birthDate: string
+  sector: JobSector
 }
 
 async function fetchFortune(
@@ -22,6 +25,7 @@ async function fetchFortune(
     body: JSON.stringify({
       name: user.name,
       birthDate: user.birthDate,
+      sector: user.sector,
       cards: cards.map((c) => ({
         id: c.id,
         orientation: c.orientation,
@@ -42,7 +46,7 @@ async function fetchFortune(
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('form')
-  const [user, setUser] = useState<UserInfo>({ name: '', birthDate: '' })
+  const [user, setUser] = useState<UserInfo>({ name: '', birthDate: '', sector: 'other' })
   const [cards, setCards] = useState<DrawnCard[]>([])
   const [revealed, setRevealed] = useState(false)
   const [fortune, setFortune] = useState<string | null>(null)
@@ -98,8 +102,8 @@ export default function App() {
         <p className="app__eyebrow">Tarot dnia roboczego</p>
         <h1>Co Cię czeka dzisiaj w pracy?</h1>
         <p className="app__lead">
-          Wpisz imię i datę urodzenia, wylosuj trzy karty i pozwól wróżbicie Czarosławowi
-          połączyć symbolikę tarota z lekką dawką codziennego absurdu.
+          Wpisz imię, datę urodzenia oraz wybierz swoją branżę. Wylosuj trzy karty i pozwól, aby 
+          symbolika tarota połączyła się z kosmicznym horoskopem Twojego zawodu.
         </p>
       </header>
 
@@ -129,6 +133,33 @@ export default function App() {
                 }
               />
             </label>
+
+            <label className="form__field">
+              <span>Branża</span>
+              <select
+  value={user.sector}
+  onChange={(e) =>
+    setUser((u) => ({ ...u, sector: e.target.value as JobSector }))
+  }
+  style={{
+    padding: '0.6rem',
+    borderRadius: '6px',
+    border: '1px solid rgba(255, 215, 160, 0.2)',
+    background: '#0f0a18',
+    color: '#ffffff',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    width: '100%',
+    outline: 'none',
+    boxSizing: 'border-box'
+  }}
+>
+  <option value="other" style={{ background: '#0f0a18', color: '#ffffff' }}>Ogólna</option>
+  <option value="auchan" style={{ background: '#0f0a18', color: '#ffffff' }}>Auchan</option>
+  <option value="eo" style={{ background: '#0f0a18', color: '#ffffff' }}>EO</option>
+</select>
+            </label>
+
             {error && <p className="app__error">{error}</p>}
             <button type="submit" className="btn btn--primary">
               Losuj karty
