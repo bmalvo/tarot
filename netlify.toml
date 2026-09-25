@@ -9,6 +9,9 @@
   port = 8888
   autoLaunch = false
 
+[functions.'*']
+  timeout = 60
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
